@@ -216,6 +216,61 @@ body{height:100%;height:-webkit-fill-available;background:var(--bg);color:var(--
 /* TOAST */
 .toast{position:fixed;bottom:calc(20px + var(--safe-b));left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;color:var(--text);z-index:500;opacity:0;transition:all .2s;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* DB INFO SCREEN */
+.dbi-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg2)}
+.dbi-tab{flex:1;padding:11px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.dbi-tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.dbi-panel{display:none;flex:1;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:12px;gap:8px;flex-direction:column;min-height:0;height:0}
+.dbi-panel.active{display:flex}
+.dbi-entry{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:5px}
+.dbi-entry-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.dbi-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3)}
+.dbi-cat{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:3px}
+.dbi-cat.schema{background:#0a1830;color:var(--blue)}
+.dbi-cat.app{background:var(--cyan2);color:var(--cyan)}
+.dbi-cat.engine{background:var(--green2);color:var(--green)}
+.dbi-cat.fix{background:var(--amber2);color:var(--amber)}
+.dbi-cat.feature{background:#1a3020;color:#30d0a0}
+.dbi-cat.decision{background:#2a1040;color:var(--purple)}
+.dbi-cat.governance{background:var(--bg4);color:var(--text2)}
+.dbi-vtag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);margin-left:auto}
+.dbi-desc{font-size:13px;color:var(--text);line-height:1.5}
+.dbi-author{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--text3);letter-spacing:.5px}
+.dbi-comp{font-size:11px;color:var(--text3);font-style:italic}
+.dbi-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:5px;cursor:pointer}
+.dbi-item:active{background:var(--bg3)}
+.dbi-item-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.dbi-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.dbi-pri{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:1px;padding:2px 7px;border-radius:3px}
+.dbi-pri.p1{background:var(--red2);color:var(--red)}
+.dbi-pri.p2{background:var(--amber2);color:var(--amber)}
+.dbi-pri.p3{background:var(--bg4);color:var(--text2)}
+.dbi-status{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:3px}
+.dbi-status.backlog{background:var(--bg4);color:var(--text2)}
+.dbi-status.in_progress{background:var(--amber2);color:var(--amber)}
+.dbi-status.done{background:var(--green2);color:var(--green)}
+.dbi-status.deferred{background:#0a1830;color:var(--blue)}
+.dbi-status.rejected{background:var(--red2);color:var(--red)}
+.dbi-ph{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:8px 0 5px;margin-top:4px;border-bottom:1px solid var(--border)}
+.dbi-add-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--bg3);border:1.5px dashed var(--border2);border-radius:var(--r);padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:var(--text3);cursor:pointer;flex-shrink:0;transition:all .15s}
+.dbi-add-btn:active{background:var(--bg4);color:var(--cyan);border-color:var(--cyan)}
+.dbi-empty{padding:32px;text-align:center;color:var(--text3);font-family:'Barlow Condensed',sans-serif;font-size:14px;line-height:1.8}
+.dbi-form-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;align-items:flex-end}
+.dbi-form-ov.open{display:flex}
+.dbi-form-sheet{width:100%;background:var(--bg2);border-top:1px solid var(--border2);border-radius:14px 14px 0 0;padding:16px;padding-bottom:calc(20px + var(--safe-b));max-height:85vh;overflow-y:auto}
+.dbi-form-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+.dbi-form-row{margin-bottom:12px}
+.dbi-form-lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.dbi-form-input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;padding:9px 12px;outline:none}
+.dbi-form-input:focus{border-color:var(--cyan)}
+.dbi-form-ta{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;padding:9px 12px;outline:none;resize:vertical;min-height:80px}
+.dbi-form-ta:focus{border-color:var(--cyan)}
+.dbi-chips-row{display:flex;flex-wrap:wrap;gap:6px}
+.dbi-chip{padding:6px 11px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:20px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--text3);cursor:pointer;transition:all .1s}
+.dbi-chip.sel{border-color:var(--cyan);background:var(--cyan3);color:var(--cyan)}
+.dbi-form-btns{display:flex;gap:8px;margin-top:16px}
+.dbi-status-update{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .nav-back{background:none;border:none;color:var(--cyan);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;padding:4px 0;display:flex;align-items:center;gap:4px}
 .tag-chip{padding:7px 12px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--text3);cursor:pointer;transition:all .1s;user-select:none;-webkit-user-select:none}
 .tag-chip.sel{border-color:var(--cyan);background:var(--cyan3);color:var(--cyan)}
@@ -243,6 +298,9 @@ body{height:100%;height:-webkit-fill-available;background:var(--bg);color:var(--
     </div>
     <div style="margin-top:16px;width:100%;display:none" id="load-proceed-wrap">
       <button class="btn-primary" onclick="goCheckin()">BEGIN SESSION →</button>
+    </div>
+    <div style="margin-top:10px;width:100%">
+      <button class="btn-ghost" style="width:100%" onclick="goDBInfo('s-load')">DB INFO</button>
     </div>
   </div>
 </div>
@@ -428,7 +486,7 @@ body{height:100%;height:-webkit-fill-available;background:var(--bg);color:var(--
       <div id="sess-title" class="hdr-title" style="flex:1;text-align:center">Session</div>
       <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
         <div id="sess-gate" class="gate-pill GREEN">—</div>
-        <button class="btn-green" onclick="goComplete()">FINISH</button>
+        <button class="btn-green" onclick="scrollToClose()">FINISH</button>
       </div>
     </div>
     <div class="hdr-meta">
@@ -461,6 +519,101 @@ body{height:100%;height:-webkit-fill-available;background:var(--bg);color:var(--
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- DB INFO FORM OVERLAYS -->
+<div class="dbi-form-ov" id="dbi-cl-form">
+  <div class="dbi-form-sheet">
+    <div class="dbi-form-title">Add Changelog Entry</div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Category</div>
+      <div class="dbi-chips-row" id="dbi-cl-cat-chips">
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">schema</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">app</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">engine</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">fix</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">feature</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">decision</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">governance</div>
+      </div>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Version Tag</div>
+      <input class="dbi-form-input" id="dbi-cl-vtag" type="text" placeholder="e.g. App_v1.1">
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Description</div>
+      <textarea class="dbi-form-ta" id="dbi-cl-desc" placeholder="What changed and why..."></textarea>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Affected Components</div>
+      <input class="dbi-form-input" id="dbi-cl-comp" type="text" placeholder="e.g. check-in screen, engine">
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Author</div>
+      <div class="dbi-chips-row" id="dbi-cl-auth-chips">
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-auth-chips')">claude</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-auth-chips')">chatgpt</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-auth-chips')">matt</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-auth-chips')">system</div>
+      </div>
+    </div>
+    <div class="dbi-form-btns">
+      <button class="btn-ghost" style="flex:1" onclick="document.getElementById('dbi-cl-form').classList.remove('open')">Cancel</button>
+      <button class="btn-primary" style="flex:2" onclick="dbiSaveChangelog()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<div class="dbi-form-ov" id="dbi-bl-form">
+  <div class="dbi-form-sheet">
+    <div class="dbi-form-title" id="dbi-bl-form-title">Add Backlog Item</div>
+    <input type="hidden" id="dbi-bl-edit-id">
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Title</div>
+      <input class="dbi-form-input" id="dbi-bl-title" type="text" placeholder="Feature or task name">
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Description</div>
+      <textarea class="dbi-form-ta" id="dbi-bl-desc" placeholder="What it does and why it matters..."></textarea>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Priority</div>
+      <div class="dbi-chips-row" id="dbi-bl-pri-chips">
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-pri-chips')">p1</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-pri-chips')">p2</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-pri-chips')">p3</div>
+      </div>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Status</div>
+      <div class="dbi-chips-row" id="dbi-bl-status-chips">
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-status-chips')">backlog</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-status-chips')">in_progress</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-status-chips')">done</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-status-chips')">deferred</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-status-chips')">rejected</div>
+      </div>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Category</div>
+      <div class="dbi-chips-row" id="dbi-bl-cat-chips">
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-cat-chips')">app</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-cat-chips')">engine</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-cat-chips')">schema</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-cat-chips')">governance</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-cat-chips')">infrastructure</div>
+      </div>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Notes</div>
+      <textarea class="dbi-form-ta" id="dbi-bl-notes" placeholder="Implementation notes, dependencies..." style="min-height:60px"></textarea>
+    </div>
+    <div class="dbi-form-btns">
+      <button class="btn-ghost" style="flex:1" onclick="dbiCancelBL()">Cancel</button>
+      <button class="btn-primary" style="flex:2" onclick="dbiSaveBacklog()">Save Item</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ═══════════════════════════════════════════════════════════════════
@@ -1600,6 +1753,7 @@ function renderSession(){
     <div class="ci-lbl" style="margin-top:10px;margin-bottom:7px">Session Tags</div>
     <div id="sess-tag-chips" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px"></div>
     <button class="btn-primary" onclick="goComplete()" style="margin-top:4px">COMPLETE SESSION & EXPORT →</button>
+    <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="goDBInfo('s-session')">DB INFO</button>
   `;
   // Build session close chips
   const sessTags=['PB','Good Form','Heavy','Technique Work','Cut Short','Deload','High Effort','Low Energy'];
@@ -1715,6 +1869,13 @@ function skipRest(){if(restInterval)clearInterval(restInterval);document.getElem
 // ═══════════════════════════════════════════════════════════════════
 // COMPLETE SESSION — WRITEBACK + EXPORT
 // ═══════════════════════════════════════════════════════════════════
+function scrollToClose(){
+  // Scroll session screen to session close section
+  const close = document.querySelector('.sess-close');
+  if(close) close.scrollIntoView({behavior:'smooth', block:'end'});
+  else showToast('Scroll to Session Close to finish');
+}
+
 function goComplete(){
   if(!sessRPE){showToast('Set session RPE first');return;}
   writeSession();
@@ -1849,6 +2010,228 @@ function showToast(msg){
 }
 
 // ═══════════════════════════════════════════════════════════════════
+// DB INFO SCREEN
+// ═══════════════════════════════════════════════════════════════════
+let dbiFromScreen = 's-load';
+
+function goDBInfo(fromScreen) {
+  dbiFromScreen = fromScreen || 's-load';
+  dbiLoadAll();
+  showScreen('s-dbinfo');
+}
+
+function dbiGoBack() {
+  showScreen(dbiFromScreen);
+}
+
+function dbiShowTab(tab, btn) {
+  document.querySelectorAll('.dbi-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dbi-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('dbi-' + tab).classList.add('active');
+}
+
+function dbiLoadAll() {
+  // Version tag from most recent changelog entry
+  try {
+    const vrow = db ? qObjs('SELECT version_tag FROM svz_changelog ORDER BY change_date DESC, id DESC LIMIT 1') : [];
+    const vtag = (vrow && vrow.length) ? vrow[0].version_tag || '—' : '—';
+    document.getElementById('dbi-version').textContent = vtag;
+  } catch(e) { document.getElementById('dbi-version').textContent = '—'; }
+  dbiRenderChangelog();
+  dbiRenderBacklog();
+}
+
+function dbiRenderChangelog() {
+  const el = document.getElementById('dbi-cl-list');
+  if (!db) {
+    el.innerHTML = '<div class="dbi-empty">No database loaded.<br>Load a database to view changelog.</div>';
+    return;
+  }
+  let rows = [];
+  try {
+    rows = qObjs('SELECT * FROM svz_changelog ORDER BY change_date DESC, id DESC');
+  } catch(e) {
+    el.innerHTML = '<div class="dbi-empty">svz_changelog table not found.<br>Run svz_seed_tables.py to create it.</div>';
+    return;
+  }
+  if (!rows.length) {
+    el.innerHTML = '<div class="dbi-empty">No changelog entries yet.</div>';
+    return;
+  }
+  el.innerHTML = rows.map(r => {
+    const cat = r.category || 'app';
+    const auth = r.author ? ' · ' + r.author : '';
+    const comp = r.affected_components ? '<div class="dbi-comp">' + r.affected_components + '</div>' : '';
+    return '<div class="dbi-entry">'
+      + '<div class="dbi-entry-top">'
+      + '<span class="dbi-date">' + (r.change_date || '—') + '</span>'
+      + '<span class="dbi-cat ' + cat + '">' + cat + '</span>'
+      + (r.version_tag ? '<span class="dbi-vtag">' + r.version_tag + '</span>' : '')
+      + '</div>'
+      + '<div class="dbi-desc">' + (r.description || '') + '</div>'
+      + comp
+      + '<div class="dbi-author">' + (r.session_ref || '') + auth + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function dbiRenderBacklog() {
+  const el = document.getElementById('dbi-bl-list');
+  if (!db) {
+    el.innerHTML = '<div class="dbi-empty">No database loaded.<br>Load a database to view backlog.</div>';
+    return;
+  }
+  let rows = [];
+  try {
+    rows = qObjs('SELECT * FROM svz_feature_backlog ORDER BY priority ASC, id ASC');
+  } catch(e) {
+    el.innerHTML = '<div class="dbi-empty">svz_feature_backlog table not found.<br>Run svz_seed_tables.py to create it.</div>';
+    return;
+  }
+  if (!rows.length) {
+    el.innerHTML = '<div class="dbi-empty">No backlog items yet.</div>';
+    return;
+  }
+  const grouped = {p1:[], p2:[], p3:[]};
+  rows.forEach(r => { if (grouped[r.priority]) grouped[r.priority].push(r); });
+  const priLabels = {p1:'P1 — Next Sprint', p2:'P2 — Near Term', p3:'P3 — Later'};
+  let html = '';
+  ['p1','p2','p3'].forEach(pri => {
+    if (!grouped[pri].length) return;
+    html += '<div class="dbi-ph">' + priLabels[pri] + '</div>';
+    grouped[pri].forEach(r => {
+      const st = (r.status || 'backlog').replace(/_/g, ' ');
+      const stClass = r.status || 'backlog';
+      html += '<div class="dbi-item" onclick="dbiOpenBLForm(' + r.id + ')">'
+        + '<div class="dbi-item-top">'
+        + '<span class="dbi-pri ' + pri + '">' + pri.toUpperCase() + '</span>'
+        + '<span class="dbi-status ' + stClass + '">' + st + '</span>'
+        + '<span class="dbi-cat ' + (r.category||'app') + '" style="margin-left:auto">' + (r.category||'') + '</span>'
+        + '</div>'
+        + '<div class="dbi-title">' + (r.title || '') + '</div>'
+        + '<div class="dbi-desc" style="font-size:12px;color:var(--text2)">' + (r.description || '').substring(0, 120) + ((r.description||'').length > 120 ? '...' : '') + '</div>'
+        + (r.notes ? '<div class="dbi-comp">' + r.notes + '</div>' : '')
+        + '</div>';
+    });
+  });
+  el.innerHTML = html;
+}
+
+// ── CHIP SELECTOR ──
+function dbiChipSel(chip, groupId) {
+  document.querySelectorAll('#' + groupId + ' .dbi-chip').forEach(c => c.classList.remove('sel'));
+  chip.classList.add('sel');
+}
+
+function dbiGetChip(groupId) {
+  const sel = document.querySelector('#' + groupId + ' .dbi-chip.sel');
+  return sel ? sel.textContent.trim() : null;
+}
+
+function dbiSetChip(groupId, value) {
+  document.querySelectorAll('#' + groupId + ' .dbi-chip').forEach(c => {
+    c.classList.toggle('sel', c.textContent.trim() === value);
+  });
+}
+
+// ── CHANGELOG FORM ──
+function dbiOpenCLForm() {
+  // Reset form
+  document.getElementById('dbi-cl-vtag').value = '';
+  document.getElementById('dbi-cl-desc').value = '';
+  document.getElementById('dbi-cl-comp').value = '';
+  document.querySelectorAll('#dbi-cl-cat-chips .dbi-chip, #dbi-cl-auth-chips .dbi-chip').forEach(c => c.classList.remove('sel'));
+  document.getElementById('dbi-cl-form').classList.add('open');
+}
+
+function dbiSaveChangelog() {
+  if (!db) { showToast('No database loaded'); return; }
+  const cat  = dbiGetChip('dbi-cl-cat-chips');
+  const auth = dbiGetChip('dbi-cl-auth-chips');
+  const desc = document.getElementById('dbi-cl-desc').value.trim();
+  if (!cat)  { showToast('Select a category'); return; }
+  if (!desc) { showToast('Description required'); return; }
+  if (!auth) { showToast('Select an author'); return; }
+  const today = new Date().toISOString().substring(0, 10);
+  const vtag  = document.getElementById('dbi-cl-vtag').value.trim() || null;
+  const comp  = document.getElementById('dbi-cl-comp').value.trim() || null;
+  try {
+    db.run('INSERT INTO svz_changelog (change_date,version_tag,category,description,affected_components,author,session_ref) VALUES(?,?,?,?,?,?,?)',
+      [today, vtag, cat, desc, comp, auth, 'App_' + today]);
+    document.getElementById('dbi-cl-form').classList.remove('open');
+    dbiRenderChangelog();
+    showToast('Changelog entry saved');
+  } catch(e) { showToast('Save failed: ' + e.message); }
+}
+
+// ── BACKLOG FORM ──
+function dbiOpenBLForm(id) {
+  document.getElementById('dbi-bl-edit-id').value = id || '';
+  document.querySelectorAll('#dbi-bl-pri-chips .dbi-chip, #dbi-bl-status-chips .dbi-chip, #dbi-bl-cat-chips .dbi-chip').forEach(c => c.classList.remove('sel'));
+
+  if (id && db) {
+    // Edit mode — load existing
+    try {
+      const rows = qObjs('SELECT * FROM svz_feature_backlog WHERE id=' + id);
+      if (rows.length) {
+        const r = rows[0];
+        document.getElementById('dbi-bl-title').value  = r.title || '';
+        document.getElementById('dbi-bl-desc').value   = r.description || '';
+        document.getElementById('dbi-bl-notes').value  = r.notes || '';
+        document.getElementById('dbi-bl-form-title').textContent = 'Edit Backlog Item';
+        dbiSetChip('dbi-bl-pri-chips',    r.priority || 'p2');
+        dbiSetChip('dbi-bl-status-chips', r.status   || 'backlog');
+        dbiSetChip('dbi-bl-cat-chips',    r.category || 'app');
+      }
+    } catch(e) {}
+  } else {
+    // New item
+    document.getElementById('dbi-bl-title').value  = '';
+    document.getElementById('dbi-bl-desc').value   = '';
+    document.getElementById('dbi-bl-notes').value  = '';
+    document.getElementById('dbi-bl-form-title').textContent = 'Add Backlog Item';
+    dbiSetChip('dbi-bl-status-chips', 'backlog');
+    dbiSetChip('dbi-bl-pri-chips',    'p2');
+  }
+  document.getElementById('dbi-bl-form').classList.add('open');
+}
+
+function dbiCancelBL() {
+  document.getElementById('dbi-bl-form').classList.remove('open');
+}
+
+function dbiSaveBacklog() {
+  if (!db) { showToast('No database loaded'); return; }
+  const title  = document.getElementById('dbi-bl-title').value.trim();
+  const desc   = document.getElementById('dbi-bl-desc').value.trim();
+  const notes  = document.getElementById('dbi-bl-notes').value.trim() || null;
+  const pri    = dbiGetChip('dbi-bl-pri-chips');
+  const status = dbiGetChip('dbi-bl-status-chips');
+  const cat    = dbiGetChip('dbi-bl-cat-chips');
+  if (!title)  { showToast('Title required'); return; }
+  if (!desc)   { showToast('Description required'); return; }
+  if (!pri)    { showToast('Select priority'); return; }
+  if (!status) { showToast('Select status'); return; }
+  if (!cat)    { showToast('Select category'); return; }
+  const today  = new Date().toISOString().substring(0, 10);
+  const editId = document.getElementById('dbi-bl-edit-id').value;
+  try {
+    if (editId) {
+      const done = status === 'done' ? today : null;
+      db.run('UPDATE svz_feature_backlog SET title=?,description=?,priority=?,status=?,category=?,notes=?,completed_date=? WHERE id=?',
+        [title, desc, pri, status, cat, notes, done, parseInt(editId)]);
+    } else {
+      db.run('INSERT INTO svz_feature_backlog (requested_date,title,description,priority,status,category,notes) VALUES(?,?,?,?,?,?,?)',
+        [today, title, desc, pri, status, cat, notes]);
+    }
+    document.getElementById('dbi-bl-form').classList.remove('open');
+    dbiRenderBacklog();
+    showToast(editId ? 'Item updated' : 'Item saved');
+  } catch(e) { showToast('Save failed: ' + e.message); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════
 initSQL().catch(e=>console.warn('SQL.js pre-init failed, will retry on file load:',e));
@@ -1857,5 +2240,127 @@ initSQL().catch(e=>console.warn('SQL.js pre-init failed, will retry on file load
 
 
 </script>
+
+<!-- ═══ CHANGELOG FORM SHEET ═══ -->
+<div class="dbi-form-ov" id="dbi-cl-form" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="dbi-form-sheet">
+    <div class="dbi-form-title">Add Changelog Entry</div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Category</div>
+      <div class="dbi-chips-row" id="dbi-cl-cat-chips">
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">app</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">engine</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">schema</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">fix</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">feature</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">decision</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-cat-chips')">governance</div>
+      </div>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Author</div>
+      <div class="dbi-chips-row" id="dbi-cl-auth-chips">
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-auth-chips')">claude</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-auth-chips')">chatgpt</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-auth-chips')">matt</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-cl-auth-chips')">system</div>
+      </div>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Version Tag</div>
+      <input class="dbi-form-input" id="dbi-cl-vtag" type="text" placeholder="e.g. App_v1.1">
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Description *</div>
+      <textarea class="dbi-form-ta" id="dbi-cl-desc" placeholder="What changed and why..."></textarea>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Affected Components</div>
+      <input class="dbi-form-input" id="dbi-cl-comp" type="text" placeholder="e.g. check-in screen, prescription engine">
+    </div>
+    <div class="dbi-form-btns">
+      <button class="btn-ghost" style="flex:1" onclick="document.getElementById('dbi-cl-form').classList.remove('open')">Cancel</button>
+      <button class="btn-primary" style="flex:2" onclick="dbiSaveChangelog()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BACKLOG FORM SHEET ═══ -->
+<div class="dbi-form-ov" id="dbi-bl-form" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="dbi-form-sheet">
+    <div class="dbi-form-title" id="dbi-bl-form-title">Add Backlog Item</div>
+    <input type="hidden" id="dbi-bl-edit-id">
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Priority</div>
+      <div class="dbi-chips-row" id="dbi-bl-pri-chips">
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-pri-chips')">p1</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-pri-chips')">p2</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-pri-chips')">p3</div>
+      </div>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Status</div>
+      <div class="dbi-chips-row" id="dbi-bl-status-chips">
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-status-chips')">backlog</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-status-chips')">in_progress</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-status-chips')">done</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-status-chips')">deferred</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-status-chips')">rejected</div>
+      </div>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Category</div>
+      <div class="dbi-chips-row" id="dbi-bl-cat-chips">
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-cat-chips')">app</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-cat-chips')">engine</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-cat-chips')">schema</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-cat-chips')">governance</div>
+        <div class="dbi-chip" onclick="dbiChipSel(this,'dbi-bl-cat-chips')">infrastructure</div>
+      </div>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Title *</div>
+      <input class="dbi-form-input" id="dbi-bl-title" type="text" placeholder="Short feature name...">
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Description *</div>
+      <textarea class="dbi-form-ta" id="dbi-bl-desc" placeholder="What it is and how it should work..."></textarea>
+    </div>
+    <div class="dbi-form-row">
+      <div class="dbi-form-lbl">Notes</div>
+      <input class="dbi-form-input" id="dbi-bl-notes" type="text" placeholder="Implementation notes, dependencies...">
+    </div>
+    <div class="dbi-form-btns">
+      <button class="btn-ghost" style="flex:1" onclick="dbiCancelBL()">Cancel</button>
+      <button class="btn-primary" style="flex:2" onclick="dbiSaveBacklog()">Save Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- DB INFO SCREEN -->
+<div class="screen" id="s-dbinfo">
+  <div class="app-hdr">
+    <div class="hdr-top">
+      <button class="nav-back" id="dbi-back-btn" onclick="dbiGoBack()">&#8249; Back</button>
+      <div class="hdr-title" style="flex:1;text-align:center">DB Info</div>
+      <div id="dbi-version" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3)">—</div>
+    </div>
+  </div>
+  <div class="dbi-tabs">
+    <div class="dbi-tab active" onclick="dbiShowTab('changelog',this)">Changelog</div>
+    <div class="dbi-tab" onclick="dbiShowTab('backlog',this)">Backlog</div>
+  </div>
+  <!-- CHANGELOG PANEL -->
+  <div class="dbi-panel active" id="dbi-changelog">
+    <div class="dbi-add-btn" onclick="dbiOpenCLForm()">+ Add Changelog Entry</div>
+    <div id="dbi-cl-list"></div>
+  </div>
+  <!-- BACKLOG PANEL -->
+  <div class="dbi-panel" id="dbi-backlog">
+    <div class="dbi-add-btn" onclick="dbiOpenBLForm(null)">+ Add Backlog Item</div>
+    <div id="dbi-bl-list"></div>
+  </div>
+</div>
+
 </body>
 </html>
