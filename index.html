@@ -275,6 +275,17 @@ body{height:100%;height:-webkit-fill-available;background:var(--bg);color:var(--
 .tag-chip{padding:7px 12px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--text3);cursor:pointer;transition:all .1s;user-select:none;-webkit-user-select:none}
 .tag-chip.sel{border-color:var(--cyan);background:var(--cyan3);color:var(--cyan)}
 .tag-chip.sel-neg{border-color:var(--amber);background:var(--amber3);color:var(--amber)}
+/* MODALITY SELECTOR */
+.mod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mod-btn{padding:12px 8px;background:var(--bg3);border:2px solid var(--border2);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:all .15s;user-select:none;-webkit-user-select:none}
+.mod-btn.sel{border-color:var(--cyan);background:var(--cyan3)}
+.mod-btn.sel .mod-icon{color:var(--cyan)}
+.mod-btn.sel .mod-lbl{color:var(--cyan)}
+.mod-icon{font-size:20px;line-height:1}
+.mod-lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
+.mod-advisory{margin-top:8px;padding:9px 12px;background:var(--amber2);border:1px solid var(--amber);border-radius:var(--rs);font-family:'Barlow',sans-serif;font-size:12px;color:var(--amber);line-height:1.5;display:none}
+.mod-advisory.show{display:block}
+.mod-advisory-strong{background:var(--red2);border-color:var(--red);color:var(--red)}
 </style>
 </head>
 <body>
@@ -342,6 +353,24 @@ body{height:100%;height:-webkit-fill-available;background:var(--bg);color:var(--
           <div><div class="cf-lbl">Combined Fatigue</div><div class="cf-val" id="cf-val">—</div><div class="cf-rule" id="cf-rule">Select BF and MF above</div></div>
           <div id="cf-gate" class="gate-pill GREEN" style="font-size:15px;padding:7px 12px">—</div>
         </div>
+      </div>
+      <div class="ci-section" style="margin-top:2px">
+        <div class="ci-lbl">Today's Session</div>
+        <div class="mod-grid">
+          <div class="mod-btn sel" id="mod-strength" onclick="toggleMod('strength',this)">
+            <div class="mod-icon">&#127947;</div>
+            <div class="mod-lbl">Strength</div>
+          </div>
+          <div class="mod-btn sel" id="mod-conditioning" onclick="toggleMod('conditioning',this)">
+            <div class="mod-icon">&#9729;</div>
+            <div class="mod-lbl">Conditioning</div>
+          </div>
+          <div class="mod-btn sel" id="mod-mobility" onclick="toggleMod('mobility',this)">
+            <div class="mod-icon">&#129340;</div>
+            <div class="mod-lbl">Mobility</div>
+          </div>
+        </div>
+        <div class="mod-advisory" id="mod-advisory"></div>
       </div>
       <div class="ci-div"></div>
       <div class="ci-section" style="margin-top:10px">
@@ -757,7 +786,66 @@ function goCheckin(){
       feelEl.appendChild(c);
     });
   }
+  // Reset modality selector to all selected
+  initModality();
   showScreen('s-checkin');
+}
+
+// ── MODALITY SELECTOR ──
+var ciModality = {strength:true, conditioning:true, mobility:true};
+
+function toggleMod(mod, btn) {
+  ciModality[mod] = !ciModality[mod];
+  btn.classList.toggle('sel', ciModality[mod]);
+  updateModAdvisory();
+}
+
+function updateModAdvisory() {
+  const adv = document.getElementById('mod-advisory');
+  if (!adv) return;
+  const bf = ci.bf || 1;
+  const mf = ci.mf || 1;
+  let cf = Math.max(bf, mf);
+  if (bf >= 2 && mf >= 2) cf = Math.min(cf + 1, 3);
+  const gate = {1:'GREEN', 2:'AMBER', 3:'RED'}[cf] || 'GREEN';
+  adv.className = 'mod-advisory';
+  adv.textContent = '';
+  const hasStr  = ciModality.strength;
+  const hasCond = ciModality.conditioning;
+  const hasMob  = ciModality.mobility;
+  const onlyStr = hasStr && !hasCond && !hasMob;
+  const noMods  = !hasStr && !hasCond && !hasMob;
+  if (noMods) {
+    adv.className = 'mod-advisory mod-advisory-strong show';
+    adv.textContent = 'No modalities selected. Select at least one to continue.';
+    return;
+  }
+  if (gate === 'GREEN') return;
+  if (gate === 'RED' && onlyStr) {
+    adv.className = 'mod-advisory mod-advisory-strong show';
+    adv.textContent = 'RED gate with Strength only is high risk. Strongly consider switching to Conditioning or Mobility today.';
+    return;
+  }
+  if (gate === 'RED' && hasStr) {
+    adv.className = 'mod-advisory show';
+    adv.textContent = 'RED gate detected. Consider dropping Strength today and focusing on Conditioning or Mobility.';
+    return;
+  }
+  if (gate === 'AMBER' && onlyStr) {
+    adv.className = 'mod-advisory show';
+    adv.textContent = 'AMBER gate with Strength only. Consider adding Mobility work to support recovery.';
+    return;
+  }
+}
+
+function initModality() {
+  ciModality = {strength:true, conditioning:true, mobility:true};
+  ['strength','conditioning','mobility'].forEach(m => {
+    const btn = document.getElementById('mod-' + m);
+    if (btn) btn.classList.add('sel');
+  });
+  const adv = document.getElementById('mod-advisory');
+  if (adv) { adv.className = 'mod-advisory'; adv.textContent = ''; }
 }
 
 function selFat(type,val,el){
@@ -787,9 +875,16 @@ function stepTime(d){ci.time=Math.min(120,Math.max(15,ci.time+d));document.getEl
 function checkCI(){const ok=ci.bf&&ci.mf&&ci.sor!==null&&ci.run&&ci.lb;document.getElementById('ci-btn').disabled=!ok;}
 
 async function proceedFromCheckin(){
+  // Check at least one modality selected
+  if (!ciModality.strength && !ciModality.conditioning && !ciModality.mobility) {
+    showToast('Select at least one modality');
+    return;
+  }
   // Read selected feel chips
   const feelChips=Array.from(document.querySelectorAll('#feel-chips .tag-chip.sel')).map(c=>c.textContent);
   ci.notes=feelChips.length?feelChips.join(', '):'';
+  // Store modality selection
+  ci.modality = Object.keys(ciModality).filter(m => ciModality[m]).join(',');
   document.getElementById('ci-btn').disabled=true;
   document.getElementById('ci-btn').textContent='Refreshing engine…';
   writeCheckin();
@@ -811,7 +906,8 @@ function writeCheckin(){
   let cf=Math.max(ci.bf||1,ci.mf||1);if(ci.bf>=2&&ci.mf>=2)cf=Math.min(cf+1,3);
   const gateMap={1:'GREEN',2:'AMBER',3:'RED'};
   const vsBase={1:'better',2:'normal',3:'worse'};
-  const notes=`BF:${ci.bf} MF:${ci.mf} CF:${cf} | ${ci.notes}`.trim();
+  const modStr = ci.modality || 'strength,conditioning,mobility';
+  const notes=`BF:${ci.bf} MF:${ci.mf} CF:${cf} MOD:${modStr} | ${ci.notes}`.trim();
   try{
     db.run(`INSERT INTO readiness_checkins
       (readiness_timestamp_local,readiness_date_local,today_soreness_0_10,today_fatigue_0_10,
@@ -1661,7 +1757,21 @@ function renderSession(){
   const gp=q1("SELECT phase FROM training_goal_current_view LIMIT 1");
   const phase=gp?gp[0]:'accumulation';
 
-  prescData.blocks.forEach(block=>{
+  // Filter blocks by selected modality
+  const activeMod = ci.modality ? ci.modality.split(',') : ['strength','conditioning','mobility'];
+  const blockModMap = {
+    'B_MAIN':'strength','B_ACC':'strength',
+    'B_COND':'conditioning','B_MOB':'mobility','B_REC':'conditioning'
+  };
+  const filteredBlocks = prescData.blocks.filter(block => {
+    const mod = blockModMap[block.block_id];
+    if (!mod) return true; // unknown blocks always show
+    return activeMod.includes(mod);
+  });
+  // Use filtered blocks for rendering
+  const blocksToRender = filteredBlocks.length > 0 ? filteredBlocks : prescData.blocks;
+
+  blocksToRender.forEach(block=>{
     const bh=document.createElement('div');bh.className='blk-hdr';bh.textContent=block.block_name;scroll.appendChild(bh);
     block.items.forEach((item,idx)=>{
       const card=document.createElement('div');card.className='ex-card';
