@@ -1695,7 +1695,6 @@ function drawDualLine(canvas,data){
 // SESSION SCREEN
 // ═══════════════════════════════════════════════════════════════════
 function goSession(){
-  sessionWritten=false;
   sessionSets=[];
   sessionWorkoutId='APP_'+new Date().toISOString().replace(/[-:.TZ]/g,'').substring(0,15);
   initSessionScreen();
@@ -1863,10 +1862,7 @@ function renderSession(){
     </div>
     <div class="ci-lbl" style="margin-top:10px;margin-bottom:7px">Session Tags</div>
     <div id="sess-tag-chips" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px"></div>
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn-ghost" style="flex:1;color:var(--red);border-color:var(--red)" onclick="cancelSession()">CANCEL</button>
-      <button class="btn-primary" style="flex:3" onclick="goComplete()">COMPLETE & EXPORT →</button>
-    </div>
+    <button class="btn-primary" onclick="goComplete()" style="margin-top:4px">COMPLETE SESSION & EXPORT →</button>
     <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="goDBInfo('s-session')">DB INFO</button>
   `;
   // Build session close chips
@@ -1984,41 +1980,16 @@ function skipRest(){if(restInterval)clearInterval(restInterval);document.getElem
 // COMPLETE SESSION — WRITEBACK + EXPORT
 // ═══════════════════════════════════════════════════════════════════
 function scrollToClose(){
-  // Always scroll to very bottom of session screen
-  const scroll = document.getElementById('sess-scroll');
-  if(scroll) scroll.scrollTop = scroll.scrollHeight;
-  // Also flash the Session Close section
+  // Scroll session screen to session close section
   const close = document.querySelector('.sess-close');
-  if(close){
-    close.style.transition = 'outline 0.2s';
-    close.style.outline = '2px solid var(--cyan)';
-    setTimeout(()=>{ close.style.outline = ''; }, 1200);
-  }
+  if(close) close.scrollIntoView({behavior:'smooth', block:'end'});
+  else showToast('Scroll to Session Close to finish');
 }
-
-function cancelSession(){
-  if(!confirm('Cancel this session? All logged sets will be discarded.')) return;
-  // Reset session state
-  sessRPE = null;
-  sessStart = Date.now();
-  sessionWritten = false;
-  const btn = document.querySelector('.btn-primary[onclick="goComplete()"]');
-  if(btn){ btn.disabled = false; btn.textContent = 'COMPLETE SESSION & EXPORT →'; }
-  showScreen('s-load');
-  showToast('Session cancelled');
-}
-
-var sessionWritten = false;
 
 function goComplete(){
   if(!sessRPE){showToast('Set session RPE first');return;}
-  if(sessionWritten){showToast('Session already saved — tap Promote to Master');exportDB();return;}
-  // Disable button to prevent double-tap
-  const btn = document.querySelector('.btn-primary[onclick="goComplete()"]');
-  if(btn){ btn.disabled=true; btn.textContent='Saving...'; }
   writeSession();
   refreshSnapshot();
-  sessionWritten = true;
   exportDB();
 }
 
@@ -2096,69 +2067,47 @@ async function exportDB(){
     const data=db.export();
     const filename='coach_db_'+new Date().toISOString().substring(0,10).replace(/-/g,'')+'.sqlite';
     const blob=new Blob([data],{type:'application/octet-stream'});
+    const file=new File([blob],filename,{type:'application/octet-stream'});
 
-    // Detect iOS vs Mac
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                  (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-
-    if(isIOS){
-      // iOS Safari: Web Share API — native share sheet
-      const file=new File([blob],filename,{type:'application/octet-stream'});
-      if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
-        try{
-          await navigator.share({
-            title:'SVZ Engine Database',
-            text:'Save to: iCloud Drive > SVZ Engine > 00_MASTER > exports',
-            files:[file]
-          });
-          showExportModal(filename, false);
-          return;
-        }catch(shareErr){
-          if(shareErr.name==='AbortError') return; // User cancelled
-          console.warn('Share failed:',shareErr);
-        }
+    // iOS Safari: use Web Share API — shows the native share sheet
+    if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+      try{
+        await navigator.share({
+          title:'SVZ Engine Database',
+          text:'Updated training database — save to Files/iCloud Drive',
+          files:[file]
+        });
+        showToast('Share sheet opened ✓');
+        return;
+      }catch(shareErr){
+        if(shareErr.name!=='AbortError') console.warn('Share failed:',shareErr);
+        // User cancelled — fall through to blob URL
       }
     }
 
-    // Mac Safari and fallback: anchor download
+    // Fallback: open blob URL in new tab — long-press to save on iOS
     const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download=filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(()=>URL.revokeObjectURL(url), 10000);
-    showExportModal(filename, false, true);
+    window.open(url,'_blank');
+    showExportModal(filename, true);
+    setTimeout(()=>URL.revokeObjectURL(url), 60000);
   }catch(e){showToast('Export failed: '+e.message);console.error(e);}
 }
 
-function showExportModal(filename, isFallback=false, isMac=false){
+function showExportModal(filename, isFallback=false){
   const overlay=document.createElement('div');
   overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:600;display:flex;align-items:flex-end';
-  const savePath='<strong style="color:#dde4ec">iCloud Drive &gt; SVZ Engine &gt; 00_MASTER &gt; exports</strong>';
-  const msg=isMac
-    ?'File downloaded to your Downloads folder. Move it to: ' + savePath
-    :isFallback
-      ?'Long-press the page to download, then move to: ' + savePath
-      :'Share sheet opened. Save to: ' + savePath;
+  const msg=isFallback
+    ?'A new tab has opened with your database file.<br><strong style="color:#dde4ec">Long-press the page → Download Linked File</strong> to save it to Files.'
+    :'The iOS share sheet should have appeared — choose <strong style="color:#dde4ec">Save to Files</strong> → iCloud Drive to save for next session.';
   overlay.innerHTML=`
     <div style="width:100%;background:#0c1118;border-top:1px solid #253545;border-radius:14px 14px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px))">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:#3f5060;margin-bottom:10px">EXPORT DATABASE</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#1fd468;margin-bottom:10px">${filename}</div>
-      <div style="font-size:13px;color:#7a8fa8;font-family:'Barlow',sans-serif;line-height:1.7;margin-bottom:6px">${msg}</div>
-      <div style="font-size:12px;color:#3f5060;font-family:'Barlow',sans-serif;margin-bottom:14px">After saving, tap Promote to Master to update the live database.</div>
-      <button onclick="promoteMaster()" style="width:100%;padding:13px;background:#1a3a2a;border:1.5px solid #1fd468;color:#1fd468;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:1.5px;border-radius:10px;cursor:pointer;margin-bottom:8px">PROMOTE TO MASTER</button>
-      <button onclick="this.closest('div[style*=fixed]').remove()" style="width:100%;padding:11px;background:transparent;border:1px solid #253545;color:#7a8fa8;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;border-radius:10px;cursor:pointer">DONE</button>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#1fd468;margin-bottom:12px">${filename}</div>
+      <div style="font-size:13px;color:#7a8fa8;font-family:'Barlow',sans-serif;line-height:1.7;margin-bottom:16px">${msg}</div>
+      <div style="font-size:12px;color:#3f5060;font-family:'Barlow',sans-serif;margin-bottom:16px">Next session: open app → Load Database → find this file</div>
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="width:100%;padding:13px;background:#08c8b0;color:#000;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1.5px;border:none;border-radius:10px;cursor:pointer">GOT IT</button>
     </div>`;
   document.body.appendChild(overlay);
-}
-
-function promoteMaster(){
-  // Trigger SVZPromoteMaster shortcut
-  const shortcutURL = 'shortcuts://run-shortcut?name=SVZPromoteMaster&x-success=' +
-    encodeURIComponent('https://matthewdetorres-oss.github.io/svz-engine/');
-  window.location.href = shortcutURL;
 }
 
 // ═══════════════════════════════════════════════════════════════════
